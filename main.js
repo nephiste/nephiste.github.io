@@ -245,19 +245,31 @@ window.onpointerdown = (event) => {
   // Calculate the position relative to the canvas
   const canvasBounds = render.canvas.getBoundingClientRect();
   const canvasX = event.clientX - canvasBounds.left;
+  const canvasY = event.clientY - canvasBounds.top;
 
-  // Ensure the fruit is within the game boundaries
-  if (canvasX < 30 || canvasX > 590) return;
+  // Game area boundaries
+  const gameAreaLeft = 30; // Left boundary
+  const gameAreaRight = render.canvas.width - 30; // Right boundary
+  const gameAreaTop = 0; // Top boundary
+  const gameAreaBottom = render.canvas.height; // Bottom boundary
 
-  //here we can see disableaction while fruits falls, so you cant put another one until it stops
-  disableAction = true;
-  Body.setPosition(currentBody, { x: canvasX, y: currentBody.position.y });
-  Sleeping.set(currentBody, false);
+  // Check if the touch/click is within the game area
+  if (
+    canvasX >= gameAreaLeft &&
+    canvasX <= gameAreaRight &&
+    canvasY >= gameAreaTop &&
+    canvasY <= gameAreaBottom
+  ) {
+    // Set disableAction while fruits fall, so you can't put another one until it stops
+    disableAction = true;
+    Body.setPosition(currentBody, { x: canvasX, y: currentBody.position.y });
+    Sleeping.set(currentBody, false);
 
-  setTimeout(() => {
-    addCurrentFruit();
-    disableAction = false;
-  }, 1000);
+    setTimeout(() => {
+      addCurrentFruit();
+      disableAction = false;
+    }, 1000);
+  }
 };
 
 //reset the game after game over
